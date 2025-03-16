@@ -1,0 +1,82 @@
+# 数据配置
+data:
+  root_dir: "../../Dataset/EgoCom-Dataset/egocom_dataset/EGOCOM/720p"
+  # root: "./data/egocom_test"
+  dataset_module: 'data.EgocomDataset'
+  noise:
+    add_noise: True
+    noise_path: None
+    snr_db: 0
+    noise_types=: gaussian
+
+  tubelet_size: [5, 16, 16]  # t,h,w
+  audio_patch_size: 16
+  sample_rate: 16000
+  mel_bins: 128
+  audio_spec:
+    sample_rate: 16000
+    # n_fft: 512
+    n_fft: 400   # 25ms (400/16000)
+    n_mels: 128
+    # hop_length: 512
+    hop_length: 160
+    global_mean: -7.523139
+    global_std: 3.413932
+    
+
+# 模型配置
+model:
+  Encoder_hidden_dim: 768
+  video_feat_dim: 768
+  audio_feat_dim: 768
+  shared_feat_dim: 768
+  visual_encoder_layers: 8
+  audio_encoder_layers: 8
+  shared_encoder_layers: 6
+  Decoder_hidden_dim: 384
+  shared_decoder_layers: 1
+  audio_decoder_layers: 3
+  Encoder_nhead: 12
+  Decoder_nhead: 6
+
+  
+
+
+
+# 训练配置
+train:
+  batch_size: 64
+  # batch_size: 32
+  num_workers: 8
+  gradient_checkpointing: True
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  mel_plot_dir: "logs/mel_plots"
+
+  epochs: 200
+  lr: 0.001
+  warmup_steps: 1000
+  warmup_ratio: 0.1
+  mask_ratio: 0.2
+  mix_precision: True
+  accumulation_steps: 2
+  gradient_accumulation_steps: 8
+  save_interval: 10
+  grad_clip: true
+  max_grad_norm: 1.0
+
+  visualize_interval: 100  # 每100步可视化一次
+  num_visual_samples: 3    # 每次显示3个样本
+
+
+val:
+  batch_size: 16
+  num_workers: 2
+
+  num_visual_samples: 5
+
+dist:
+  rank: 0
+  world_size: 2
+  master_addr: localhost
+  master_port: 12355
